@@ -1,5 +1,6 @@
 import fetch from "node-fetch";
 import readlineSync from "readline-sync";
+import chalk from "chalk";
 
 const getCurl = (inputEmail, deviceId) => new Promise((resolve, reject) => {
     fetch(`https://api-mgm-indo.mcdonalds.co.id/member`, {
@@ -56,11 +57,15 @@ function generateRandomChars(length) {
     const inputEmail = readlineSync.question(`[?] Masukkan Email Kamu : `)
 
     const resultCurl = await getCurl(inputEmail, deviceId)
-    // console.log(resultCurl)
+    console.log(resultCurl)
 
     if (resultCurl.meta.status === '200') {
-        console.log(`[!] Status : Berhasil`)
-    } else {
+        console.log(`[!] Status : ${chalk.green(`Berhasil`)}`)
+    } else if (resultCurl.meta.status === `422`) {
+        const deskripsi = resultCurl.meta.description
+        console.log(`[!] Status : ${chalk.red(deskripsi)}`)
+    }
+    else {
         console.log(`[!] Status : Tidak berhasil Curl`)
     }
 })();
